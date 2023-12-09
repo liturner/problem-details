@@ -3,9 +3,7 @@
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -32,7 +30,7 @@ public class Problem {
     /** application/problem+json */
     public static final String MEDIA_TYPE_JSON = &quot;application/problem+json&quot;;
     
-<span class="fc" id="L35">    private static final ResourceBundle i18n = ResourceBundle.getBundle(&quot;de.turnertech.problemdetails.i18n&quot;);</span>
+<span class="fc" id="L33">    private static final ResourceBundle i18n = ResourceBundle.getBundle(&quot;de.turnertech.problemdetails.i18n&quot;);</span>
 
     private static final String PROBLEM_STRING = &quot;problem&quot;;
     
@@ -55,8 +53,8 @@ public class Problem {
      * Constructs an empty Problem with the type &quot;about:blank&quot; (RFC 9457 - 4.2.1.).
      */
     public Problem() {
-<span class="fc" id="L58">        this(URI.create(&quot;about:blank&quot;));</span>
-<span class="fc" id="L59">    }</span>
+<span class="fc" id="L56">        this(URI.create(&quot;about:blank&quot;));</span>
+<span class="fc" id="L57">    }</span>
 
     /**
      * Constructs a Problem with the provided parameters. Note that type may not be null.
@@ -64,8 +62,8 @@ public class Problem {
      * @throws NullPointerException if type is null.
      */
     public Problem(URI type) {
-<span class="fc" id="L67">        this(type, null);</span>
-<span class="fc" id="L68">    }</span>
+<span class="fc" id="L65">        this(type, null);</span>
+<span class="fc" id="L66">    }</span>
 
     /**
      * Constructs a Problem with the provided parameters. Note that type may not be null.
@@ -73,30 +71,30 @@ public class Problem {
      * @param instance RFC 9457 - 3.1.5.
      * @throws NullPointerException if type is null.
      */
-<span class="fc" id="L76">    public Problem(URI type, URI instance) throws NullPointerException {</span>
-<span class="fc" id="L77">        this.type = Objects.requireNonNull(type, i18n.getString(&quot;error.type.nonnull&quot;));</span>
-<span class="fc" id="L78">        this.instance = instance;</span>
-<span class="fc" id="L79">    }</span>
+<span class="fc" id="L74">    public Problem(URI type, URI instance) throws NullPointerException {</span>
+<span class="fc" id="L75">        this.type = Objects.requireNonNull(type, i18n.getString(&quot;error.type.nonnull&quot;));</span>
+<span class="fc" id="L76">        this.instance = instance;</span>
+<span class="fc" id="L77">    }</span>
     
     /**
      * Constructs a deep copy of the provided problem. If you extend this class, make sure
      * that your implementation of the copy constructor also returns deep copies.
      * @param other problem to copy.
      */
-<span class="nc" id="L86">    public Problem(Problem other) {</span>
-<span class="nc" id="L87">        this.type = other.type;</span>
-<span class="nc" id="L88">        this.status = other.status;</span>
-<span class="nc" id="L89">        this.title = other.title;</span>
-<span class="nc" id="L90">        this.detail = other.detail;</span>
-<span class="nc" id="L91">        this.instance = other.instance;</span>
-<span class="nc" id="L92">    }</span>
+<span class="nc" id="L84">    public Problem(Problem other) {</span>
+<span class="nc" id="L85">        this.type = other.type;</span>
+<span class="nc" id="L86">        this.status = other.status;</span>
+<span class="nc" id="L87">        this.title = other.title;</span>
+<span class="nc" id="L88">        this.detail = other.detail;</span>
+<span class="nc" id="L89">        this.instance = other.instance;</span>
+<span class="nc" id="L90">    }</span>
 
     /**
      * Gets the problem type.
      * @return the problem type.
      */
     public URI getType() {
-<span class="fc" id="L99">        return type;</span>
+<span class="fc" id="L97">        return type;</span>
     }
 
     /**
@@ -105,15 +103,15 @@ public class Problem {
      * @throws NullPointerException if type is null
      */
     public void setType(URI type) throws NullPointerException {
-<span class="nc" id="L108">        this.type = Objects.requireNonNull(type, i18n.getString(&quot;error.type.nonnull&quot;));</span>
-<span class="nc" id="L109">    }</span>
+<span class="nc" id="L106">        this.type = Objects.requireNonNull(type, i18n.getString(&quot;error.type.nonnull&quot;));</span>
+<span class="nc" id="L107">    }</span>
 
     /**
      * Gets the problem status code (HTTP Status Code).
      * @return the problem status code (HTTP Status Code)
      */
     public Integer getStatus() {
-<span class="nc" id="L116">        return status;</span>
+<span class="nc" id="L114">        return status;</span>
     }
 
     /**
@@ -122,18 +120,18 @@ public class Problem {
      * @see #findStatusPhrase(int)
      */
     public void setStatus(Integer status) {
-<span class="pc bpc" id="L125" title="3 of 6 branches missed.">        if(status != null &amp;&amp; (status &lt; 100 || status &gt; 599)) {</span>
-<span class="nc" id="L126">            throw new InvalidParameterException(i18n.getString(&quot;error.status.inrange&quot;));</span>
+<span class="pc bpc" id="L123" title="3 of 6 branches missed.">        if(status != null &amp;&amp; (status &lt; 100 || status &gt; 599)) {</span>
+<span class="nc" id="L124">            throw new InvalidParameterException(i18n.getString(&quot;error.status.inrange&quot;));</span>
         }
-<span class="fc" id="L128">        this.status = status;</span>
-<span class="fc" id="L129">    }</span>
+<span class="fc" id="L126">        this.status = status;</span>
+<span class="fc" id="L127">    }</span>
 
     /**
      * Gets the problem title.
      * @return the problem title.
      */
     public String getTitle() {
-<span class="nc" id="L136">        return title;</span>
+<span class="nc" id="L134">        return title;</span>
     }
 
     /**
@@ -142,15 +140,15 @@ public class Problem {
      * @see #findStatusPhrase(int)
      */
     public void setTitle(String title) {
-<span class="fc" id="L145">        this.title = title;</span>
-<span class="fc" id="L146">    }</span>
+<span class="fc" id="L143">        this.title = title;</span>
+<span class="fc" id="L144">    }</span>
 
     /**
      * Gets the problem detail.
      * @return the problem detail.
      */
     public String getDetail() {
-<span class="nc" id="L153">        return detail;</span>
+<span class="nc" id="L151">        return detail;</span>
     }
 
     /**
@@ -158,15 +156,15 @@ public class Problem {
      * @param detail the problem detail.
      */
     public void setDetail(String detail) {
-<span class="nc" id="L161">        this.detail = detail;</span>
-<span class="nc" id="L162">    }</span>
+<span class="nc" id="L159">        this.detail = detail;</span>
+<span class="nc" id="L160">    }</span>
 
     /**
      * Gets the problem instance.
      * @return the problem instance.
      */
     public URI getInstance() {
-<span class="nc" id="L169">        return instance;</span>
+<span class="nc" id="L167">        return instance;</span>
     }
 
     /**
@@ -174,8 +172,8 @@ public class Problem {
      * @param instance the problem instance.
      */
     public void setInstance(URI instance) {
-<span class="nc" id="L177">        this.instance = instance;</span>
-<span class="nc" id="L178">    }</span>
+<span class="nc" id="L175">        this.instance = instance;</span>
+<span class="nc" id="L176">    }</span>
 
     /**
      * Helper for retrieving the HTTP Status Phrase for a HTTP Status Code.
@@ -184,7 +182,7 @@ public class Problem {
      * @see #findStatusPhrase(int, Locale)
      */
     public static String findStatusPhrase(int statusCode) {
-<span class="fc" id="L187">        return findStatusPhrase(statusCode, Locale.ENGLISH);</span>
+<span class="fc" id="L185">        return findStatusPhrase(statusCode, Locale.ENGLISH);</span>
     }
 
     /**
@@ -195,8 +193,8 @@ public class Problem {
      * @see #findStatusPhrase(int)
      */
     public static String findStatusPhrase(int statusCode, Locale locale) {
-<span class="fc" id="L198">        ResourceBundle strings = ResourceBundle.getBundle(&quot;de.turnertech.problemdetails.i18n&quot;, locale);</span>
-<span class="fc" id="L199">        return strings.getString(Integer.toString(statusCode));</span>
+<span class="fc" id="L196">        ResourceBundle strings = ResourceBundle.getBundle(&quot;de.turnertech.problemdetails.i18n&quot;, locale);</span>
+<span class="fc" id="L197">        return strings.getString(Integer.toString(statusCode));</span>
     }
     
     /**
@@ -208,9 +206,9 @@ public class Problem {
      * @see #toJson(OutputStream, Charset)
      */
     public String toJson() throws IOException {
-<span class="fc" id="L211">        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {</span>
-<span class="fc" id="L212">            toJson(outputStream);</span>
-<span class="fc" id="L213">            return outputStream.toString(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L209">        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {</span>
+<span class="fc" id="L210">            toJson(outputStream);</span>
+<span class="fc" id="L211">            return outputStream.toString(StandardCharsets.UTF_8);</span>
         }
     }
 
@@ -223,8 +221,8 @@ public class Problem {
      * @see #toJson(OutputStream, Charset)
      */
     public void toJson(OutputStream outputStream) throws IOException {
-<span class="fc" id="L226">        toJson(outputStream, StandardCharsets.UTF_8);</span>
-<span class="fc" id="L227">    }</span>
+<span class="fc" id="L224">        toJson(outputStream, StandardCharsets.UTF_8);</span>
+<span class="fc" id="L225">    }</span>
 
     /**
      * Writes the Problem to the supplied stream in JSON format using the supplied Charset.
@@ -233,40 +231,40 @@ public class Problem {
      * @throws IOException if there are problems with extending the JSON.
      */
     public void toJson(OutputStream outputStream, Charset charset) throws IOException {
-<span class="fc" id="L236">        try(PrintWriter printWriter = new PrintWriter(outputStream)) {</span>
-<span class="fc" id="L237">            printWriter.write(&quot;{\&quot;type\&quot;:\&quot;&quot;);</span>
-<span class="fc" id="L238">            printWriter.write(type.toString());</span>
-<span class="fc" id="L239">            printWriter.write(&quot;\&quot;&quot;);</span>
+<span class="fc" id="L234">        try(PrintWriter printWriter = new PrintWriter(outputStream)) {</span>
+<span class="fc" id="L235">            printWriter.write(&quot;{\&quot;type\&quot;:\&quot;&quot;);</span>
+<span class="fc" id="L236">            printWriter.write(type.toString());</span>
+<span class="fc" id="L237">            printWriter.write(&quot;\&quot;&quot;);</span>
 
-<span class="pc bpc" id="L241" title="1 of 2 branches missed.">            if(title != null) {</span>
-<span class="fc" id="L242">                printWriter.write(&quot;,\&quot;title\&quot;:\&quot;&quot;);</span>
-<span class="fc" id="L243">                printWriter.write(title);</span>
-<span class="fc" id="L244">                printWriter.write(&quot;\&quot;&quot;);</span>
+<span class="pc bpc" id="L239" title="1 of 2 branches missed.">            if(title != null) {</span>
+<span class="fc" id="L240">                printWriter.write(&quot;,\&quot;title\&quot;:\&quot;&quot;);</span>
+<span class="fc" id="L241">                printWriter.write(title);</span>
+<span class="fc" id="L242">                printWriter.write(&quot;\&quot;&quot;);</span>
             }
-<span class="pc bpc" id="L246" title="1 of 2 branches missed.">            if(status != null) {</span>
-<span class="fc" id="L247">                printWriter.write(&quot;,\&quot;status\&quot;:\&quot;&quot;);</span>
-<span class="fc" id="L248">                printWriter.write(Integer.toString(status));</span>
-<span class="fc" id="L249">                printWriter.write(&quot;\&quot;&quot;);</span>
+<span class="pc bpc" id="L244" title="1 of 2 branches missed.">            if(status != null) {</span>
+<span class="fc" id="L245">                printWriter.write(&quot;,\&quot;status\&quot;:\&quot;&quot;);</span>
+<span class="fc" id="L246">                printWriter.write(Integer.toString(status));</span>
+<span class="fc" id="L247">                printWriter.write(&quot;\&quot;&quot;);</span>
             }
-<span class="pc bpc" id="L251" title="1 of 2 branches missed.">            if(detail != null) {</span>
-<span class="nc" id="L252">                printWriter.write(&quot;,\&quot;detail\&quot;:\&quot;&quot;);</span>
-<span class="nc" id="L253">                printWriter.write(detail);</span>
-<span class="nc" id="L254">                printWriter.write(&quot;\&quot;&quot;);</span>
+<span class="pc bpc" id="L249" title="1 of 2 branches missed.">            if(detail != null) {</span>
+<span class="nc" id="L250">                printWriter.write(&quot;,\&quot;detail\&quot;:\&quot;&quot;);</span>
+<span class="nc" id="L251">                printWriter.write(detail);</span>
+<span class="nc" id="L252">                printWriter.write(&quot;\&quot;&quot;);</span>
             }
-<span class="pc bpc" id="L256" title="1 of 2 branches missed.">            if(instance != null) {</span>
-<span class="nc" id="L257">                printWriter.write(&quot;,\&quot;instance\&quot;:\&quot;&quot;);</span>
-<span class="nc" id="L258">                printWriter.write(instance.toString());</span>
-<span class="nc" id="L259">                printWriter.write(&quot;\&quot;&quot;);</span>
+<span class="pc bpc" id="L254" title="1 of 2 branches missed.">            if(instance != null) {</span>
+<span class="nc" id="L255">                printWriter.write(&quot;,\&quot;instance\&quot;:\&quot;&quot;);</span>
+<span class="nc" id="L256">                printWriter.write(instance.toString());</span>
+<span class="nc" id="L257">                printWriter.write(&quot;\&quot;&quot;);</span>
             }
 
-<span class="fc" id="L262">            printWriter.flush();</span>
+<span class="fc" id="L260">            printWriter.flush();</span>
 
         }
 
-<span class="fc" id="L266">        extendJson(outputStream, charset);</span>
+<span class="fc" id="L264">        extendJson(outputStream, charset);</span>
 
-<span class="fc" id="L268">        outputStream.write(&quot;}&quot;.getBytes(charset));</span>
-<span class="fc" id="L269">    }</span>
+<span class="fc" id="L266">        outputStream.write(&quot;}&quot;.getBytes(charset));</span>
+<span class="fc" id="L267">    }</span>
 
     /**
      * &lt;p&gt;Override this if you wish to extend the JSON response. This function is called directly before
@@ -277,7 +275,7 @@ public class Problem {
      */
     protected boolean extendJson(OutputStream outputStream, Charset charset) {
         // Called before closing the last element.
-<span class="fc" id="L280">        return false;</span>
+<span class="fc" id="L278">        return false;</span>
     }
 
     /**
@@ -289,11 +287,11 @@ public class Problem {
      * @see #toXml(XMLStreamWriter, Charset, boolean)
      */
     public String toXml() throws XMLStreamException {
-<span class="fc" id="L292">        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {</span>
-<span class="fc" id="L293">            toXml(outputStream, StandardCharsets.UTF_8, true);</span>
-<span class="fc" id="L294">            return outputStream.toString(StandardCharsets.UTF_8);</span>
-<span class="nc" id="L295">        } catch (IOException e) {</span>
-<span class="nc" id="L296">            return null;</span>
+<span class="fc" id="L290">        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {</span>
+<span class="fc" id="L291">            toXml(outputStream, StandardCharsets.UTF_8, true);</span>
+<span class="fc" id="L292">            return outputStream.toString(StandardCharsets.UTF_8);</span>
+<span class="nc" id="L293">        } catch (IOException e) {</span>
+<span class="nc" id="L294">            return null;</span>
         }
     }
     
@@ -303,14 +301,13 @@ public class Problem {
      * @param charset to write using.
      * @param writeStartDocument to indicate if the xml start document should also be written.
      * @throws XMLStreamException if there are problems with extending the XML.
-     * @throws UnsupportedEncodingException
      */
-    public void toXml(OutputStream outputStream, Charset charset, boolean writeStartDocument) throws XMLStreamException, UnsupportedEncodingException {
-<span class="fc" id="L309">        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, charset);</span>
-<span class="fc" id="L310">        XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();</span>
-<span class="fc" id="L311">        XMLStreamWriter xmlStreamWriter = outputFactory.createXMLStreamWriter(outputStreamWriter);</span>
-<span class="fc" id="L312">        toXml(xmlStreamWriter, charset, writeStartDocument);</span>
-<span class="fc" id="L313">    }</span>
+    public void toXml(OutputStream outputStream, Charset charset, boolean writeStartDocument) throws XMLStreamException {
+<span class="fc" id="L306">        XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();</span>
+<span class="fc" id="L307">        outputFactory.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, true);</span>
+<span class="fc" id="L308">        XMLStreamWriter xmlStreamWriter = outputFactory.createXMLStreamWriter(outputStream, charset.toString());</span>
+<span class="fc" id="L309">        toXml(xmlStreamWriter, charset, writeStartDocument);</span>
+<span class="fc" id="L310">    }</span>
     
     /**
      * Writes the Problem to the supplied writer in XML format using the supplied charset.
@@ -320,91 +317,92 @@ public class Problem {
      * @throws XMLStreamException if there are problems with extending the XML.
      */
     public void toXml(XMLStreamWriter xmlStreamWriter, Charset charset, boolean writeStartDocument) throws XMLStreamException {
-<span class="pc bpc" id="L323" title="1 of 2 branches missed.">        if(writeStartDocument) {</span>
-<span class="fc" id="L324">            xmlStreamWriter.writeStartDocument(charset.toString(), &quot;1.0&quot;);</span>
+<span class="pc bpc" id="L320" title="1 of 2 branches missed.">        if(writeStartDocument) {</span>
+<span class="fc" id="L321">            xmlStreamWriter.writeStartDocument(charset.toString(), &quot;1.0&quot;);</span>
         }
         
-<span class="fc" id="L327">        String defaultNs = xmlStreamWriter.getNamespaceContext().getNamespaceURI(&quot;&quot;);</span>
-<span class="fc" id="L328">        String prefix = xmlStreamWriter.getNamespaceContext().getPrefix(NAMESPACE);</span>
+<span class="fc" id="L324">        String defaultNs = xmlStreamWriter.getNamespaceContext().getNamespaceURI(&quot;&quot;);</span>
+<span class="fc" id="L325">        String prefix = xmlStreamWriter.getNamespaceContext().getPrefix(NAMESPACE);</span>
         
-<span class="pc bpc" id="L330" title="1 of 2 branches missed.">        if(prefix != null) {</span>
-<span class="nc" id="L331">            xmlStreamWriter.writeStartElement(NAMESPACE, PROBLEM_STRING);</span>
-<span class="pc bpc" id="L332" title="1 of 2 branches missed.">        } else if(defaultNs == null) {</span>
-<span class="fc" id="L333">            xmlStreamWriter.writeStartElement(PROBLEM_STRING);</span>
-<span class="fc" id="L334">            xmlStreamWriter.writeDefaultNamespace(NAMESPACE);</span>
+<span class="pc bpc" id="L327" title="1 of 2 branches missed.">        if(prefix != null) {</span>
+<span class="nc" id="L328">            xmlStreamWriter.writeStartElement(NAMESPACE, PROBLEM_STRING);</span>
+<span class="pc bpc" id="L329" title="1 of 2 branches missed.">        } else if(defaultNs == null) {</span>
+<span class="fc" id="L330">            xmlStreamWriter.writeStartElement(PROBLEM_STRING);</span>
+<span class="fc" id="L331">            xmlStreamWriter.writeDefaultNamespace(NAMESPACE);</span>
         } else {
-<span class="nc" id="L336">            prefix = &quot;p&quot;;</span>
-<span class="nc" id="L337">            int i = 0;</span>
-<span class="nc bnc" id="L338" title="All 2 branches missed.">            while(xmlStreamWriter.getNamespaceContext().getNamespaceURI(prefix) != null) {</span>
-<span class="nc" id="L339">                prefix = &quot;p&quot; + Integer.toString(i);</span>
+<span class="nc" id="L333">            prefix = &quot;p&quot;;</span>
+<span class="nc" id="L334">            int i = 0;</span>
+<span class="nc bnc" id="L335" title="All 2 branches missed.">            while(xmlStreamWriter.getNamespaceContext().getNamespaceURI(prefix) != null) {</span>
+<span class="nc" id="L336">                prefix = &quot;p&quot; + Integer.toString(i);</span>
             }
-<span class="nc" id="L341">            xmlStreamWriter.writeStartElement(prefix, PROBLEM_STRING, NAMESPACE);</span>
-<span class="nc" id="L342">            xmlStreamWriter.writeNamespace(prefix, NAMESPACE);</span>
+<span class="nc" id="L338">            xmlStreamWriter.writeStartElement(prefix, PROBLEM_STRING, NAMESPACE);</span>
+<span class="nc" id="L339">            xmlStreamWriter.writeNamespace(prefix, NAMESPACE);</span>
         }
         
-<span class="pc bpc" id="L345" title="1 of 2 branches missed.">        if(type != null) {</span>
-<span class="fc" id="L346">            xmlStreamWriter.writeStartElement(NAMESPACE, PROBLEM_STRING);</span>
-<span class="fc" id="L347">            xmlStreamWriter.writeCharacters(type.toString());</span>
-<span class="fc" id="L348">            xmlStreamWriter.writeEndElement();</span>
+<span class="pc bpc" id="L342" title="1 of 2 branches missed.">        if(type != null) {</span>
+<span class="fc" id="L343">            xmlStreamWriter.writeStartElement(NAMESPACE, PROBLEM_STRING);</span>
+<span class="fc" id="L344">            xmlStreamWriter.writeCharacters(type.toString());</span>
+<span class="fc" id="L345">            xmlStreamWriter.writeEndElement();</span>
         }
 
-<span class="pc bpc" id="L351" title="1 of 2 branches missed.">        if(title != null) {</span>
-<span class="fc" id="L352">            xmlStreamWriter.writeStartElement(NAMESPACE, &quot;title&quot;);</span>
-<span class="fc" id="L353">            xmlStreamWriter.writeCharacters(title);</span>
-<span class="fc" id="L354">            xmlStreamWriter.writeEndElement();</span>
+<span class="pc bpc" id="L348" title="1 of 2 branches missed.">        if(title != null) {</span>
+<span class="fc" id="L349">            xmlStreamWriter.writeStartElement(NAMESPACE, &quot;title&quot;);</span>
+<span class="fc" id="L350">            xmlStreamWriter.writeCharacters(title);</span>
+<span class="fc" id="L351">            xmlStreamWriter.writeEndElement();</span>
         }
 
-<span class="pc bpc" id="L357" title="1 of 2 branches missed.">        if(status != null) {</span>
-<span class="fc" id="L358">            xmlStreamWriter.writeStartElement(NAMESPACE, &quot;status&quot;);</span>
-<span class="fc" id="L359">            xmlStreamWriter.writeCharacters(Integer.toString(status));</span>
-<span class="fc" id="L360">            xmlStreamWriter.writeEndElement();</span>
+<span class="pc bpc" id="L354" title="1 of 2 branches missed.">        if(status != null) {</span>
+<span class="fc" id="L355">            xmlStreamWriter.writeStartElement(NAMESPACE, &quot;status&quot;);</span>
+<span class="fc" id="L356">            xmlStreamWriter.writeCharacters(Integer.toString(status));</span>
+<span class="fc" id="L357">            xmlStreamWriter.writeEndElement();</span>
         }
 
-<span class="pc bpc" id="L363" title="1 of 2 branches missed.">        if(detail != null) {</span>
-<span class="nc" id="L364">            xmlStreamWriter.writeStartElement(NAMESPACE, &quot;detail&quot;);</span>
-<span class="nc" id="L365">            xmlStreamWriter.writeCharacters(detail);</span>
-<span class="nc" id="L366">            xmlStreamWriter.writeEndElement();</span>
+<span class="pc bpc" id="L360" title="1 of 2 branches missed.">        if(detail != null) {</span>
+<span class="nc" id="L361">            xmlStreamWriter.writeStartElement(NAMESPACE, &quot;detail&quot;);</span>
+<span class="nc" id="L362">            xmlStreamWriter.writeCharacters(detail);</span>
+<span class="nc" id="L363">            xmlStreamWriter.writeEndElement();</span>
         }
 
-<span class="pc bpc" id="L369" title="1 of 2 branches missed.">        if(instance != null) {</span>
-<span class="nc" id="L370">            xmlStreamWriter.writeStartElement(NAMESPACE, &quot;instance&quot;);</span>
-<span class="nc" id="L371">            xmlStreamWriter.writeCharacters(instance.toString());</span>
-<span class="nc" id="L372">            xmlStreamWriter.writeEndElement();</span>
+<span class="pc bpc" id="L366" title="1 of 2 branches missed.">        if(instance != null) {</span>
+<span class="nc" id="L367">            xmlStreamWriter.writeStartElement(NAMESPACE, &quot;instance&quot;);</span>
+<span class="nc" id="L368">            xmlStreamWriter.writeCharacters(instance.toString());</span>
+<span class="nc" id="L369">            xmlStreamWriter.writeEndElement();</span>
         }
         
-<span class="fc" id="L375">        extendXml(xmlStreamWriter, charset);</span>
+<span class="fc" id="L372">        extendXml(xmlStreamWriter, charset);</span>
         
         // /problem
-<span class="fc" id="L378">        xmlStreamWriter.writeEndElement();</span>
+<span class="fc" id="L375">        xmlStreamWriter.writeEndElement();</span>
         
-<span class="pc bpc" id="L380" title="1 of 2 branches missed.">        if(writeStartDocument) {</span>
-<span class="fc" id="L381">            xmlStreamWriter.writeEndDocument();</span>
+<span class="pc bpc" id="L377" title="1 of 2 branches missed.">        if(writeStartDocument) {</span>
+<span class="fc" id="L378">            xmlStreamWriter.writeEndDocument();</span>
         }
-<span class="fc" id="L383">    }</span>
+<span class="fc" id="L380">    }</span>
     
     /**
      * Override this if you wish to extend the XML response. This function is called directly before
      * closing the problem element. Pay carefull attention to the namespaces!
      * @param xmlStreamWriter the writer you must use to write to the stream
      * @param charset the charset this XML is being written in
+     * @throws XMLStreamException if there are problems with extending the XML.
      */
     protected void extendXml(XMLStreamWriter xmlStreamWriter, Charset charset) throws XMLStreamException {
         // Called before closing the last element.
-<span class="fc" id="L393">    }</span>
+<span class="fc" id="L391">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L400">        final int prime = 31;</span>
-<span class="nc" id="L401">        int result = 1;</span>
-<span class="nc bnc" id="L402" title="All 2 branches missed.">        result = prime * result + ((type == null) ? 0 : type.hashCode());</span>
-<span class="nc bnc" id="L403" title="All 2 branches missed.">        result = prime * result + ((status == null) ? 0 : status.hashCode());</span>
-<span class="nc bnc" id="L404" title="All 2 branches missed.">        result = prime * result + ((title == null) ? 0 : title.hashCode());</span>
-<span class="nc bnc" id="L405" title="All 2 branches missed.">        result = prime * result + ((detail == null) ? 0 : detail.hashCode());</span>
-<span class="nc bnc" id="L406" title="All 2 branches missed.">        result = prime * result + ((instance == null) ? 0 : instance.hashCode());</span>
-<span class="nc" id="L407">        return result;</span>
+<span class="nc" id="L398">        final int prime = 31;</span>
+<span class="nc" id="L399">        int result = 1;</span>
+<span class="nc bnc" id="L400" title="All 2 branches missed.">        result = prime * result + ((type == null) ? 0 : type.hashCode());</span>
+<span class="nc bnc" id="L401" title="All 2 branches missed.">        result = prime * result + ((status == null) ? 0 : status.hashCode());</span>
+<span class="nc bnc" id="L402" title="All 2 branches missed.">        result = prime * result + ((title == null) ? 0 : title.hashCode());</span>
+<span class="nc bnc" id="L403" title="All 2 branches missed.">        result = prime * result + ((detail == null) ? 0 : detail.hashCode());</span>
+<span class="nc bnc" id="L404" title="All 2 branches missed.">        result = prime * result + ((instance == null) ? 0 : instance.hashCode());</span>
+<span class="nc" id="L405">        return result;</span>
     }
 
     /**
@@ -412,39 +410,39 @@ public class Problem {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="pc bpc" id="L415" title="1 of 2 branches missed.">        if (this == obj)</span>
-<span class="nc" id="L416">            return true;</span>
-<span class="pc bpc" id="L417" title="1 of 2 branches missed.">        if (obj == null)</span>
+<span class="pc bpc" id="L413" title="1 of 2 branches missed.">        if (this == obj)</span>
+<span class="nc" id="L414">            return true;</span>
+<span class="pc bpc" id="L415" title="1 of 2 branches missed.">        if (obj == null)</span>
+<span class="nc" id="L416">            return false;</span>
+<span class="pc bpc" id="L417" title="1 of 2 branches missed.">        if (getClass() != obj.getClass())</span>
 <span class="nc" id="L418">            return false;</span>
-<span class="pc bpc" id="L419" title="1 of 2 branches missed.">        if (getClass() != obj.getClass())</span>
-<span class="nc" id="L420">            return false;</span>
-<span class="fc" id="L421">        Problem other = (Problem) obj;</span>
-<span class="pc bpc" id="L422" title="1 of 2 branches missed.">        if (type == null) {</span>
-<span class="nc bnc" id="L423" title="All 2 branches missed.">            if (other.type != null)</span>
-<span class="nc" id="L424">                return false;</span>
-<span class="pc bpc" id="L425" title="1 of 2 branches missed.">        } else if (!type.equals(other.type))</span>
-<span class="nc" id="L426">            return false;</span>
-<span class="pc bpc" id="L427" title="1 of 2 branches missed.">        if (status == null) {</span>
-<span class="pc bpc" id="L428" title="1 of 2 branches missed.">            if (other.status != null)</span>
-<span class="nc" id="L429">                return false;</span>
-<span class="nc bnc" id="L430" title="All 2 branches missed.">        } else if (!status.equals(other.status))</span>
-<span class="nc" id="L431">            return false;</span>
-<span class="pc bpc" id="L432" title="1 of 2 branches missed.">        if (title == null) {</span>
-<span class="pc bpc" id="L433" title="1 of 2 branches missed.">            if (other.title != null)</span>
-<span class="nc" id="L434">                return false;</span>
-<span class="nc bnc" id="L435" title="All 2 branches missed.">        } else if (!title.equals(other.title))</span>
-<span class="nc" id="L436">            return false;</span>
-<span class="pc bpc" id="L437" title="1 of 2 branches missed.">        if (detail == null) {</span>
-<span class="pc bpc" id="L438" title="1 of 2 branches missed.">            if (other.detail != null)</span>
-<span class="nc" id="L439">                return false;</span>
-<span class="nc bnc" id="L440" title="All 2 branches missed.">        } else if (!detail.equals(other.detail))</span>
-<span class="nc" id="L441">            return false;</span>
-<span class="pc bpc" id="L442" title="1 of 2 branches missed.">        if (instance == null) {</span>
-<span class="pc bpc" id="L443" title="1 of 2 branches missed.">            if (other.instance != null)</span>
-<span class="nc" id="L444">                return false;</span>
-<span class="nc bnc" id="L445" title="All 2 branches missed.">        } else if (!instance.equals(other.instance))</span>
-<span class="nc" id="L446">            return false;</span>
-<span class="fc" id="L447">        return true;</span>
+<span class="fc" id="L419">        Problem other = (Problem) obj;</span>
+<span class="pc bpc" id="L420" title="1 of 2 branches missed.">        if (type == null) {</span>
+<span class="nc bnc" id="L421" title="All 2 branches missed.">            if (other.type != null)</span>
+<span class="nc" id="L422">                return false;</span>
+<span class="pc bpc" id="L423" title="1 of 2 branches missed.">        } else if (!type.equals(other.type))</span>
+<span class="nc" id="L424">            return false;</span>
+<span class="pc bpc" id="L425" title="1 of 2 branches missed.">        if (status == null) {</span>
+<span class="pc bpc" id="L426" title="1 of 2 branches missed.">            if (other.status != null)</span>
+<span class="nc" id="L427">                return false;</span>
+<span class="nc bnc" id="L428" title="All 2 branches missed.">        } else if (!status.equals(other.status))</span>
+<span class="nc" id="L429">            return false;</span>
+<span class="pc bpc" id="L430" title="1 of 2 branches missed.">        if (title == null) {</span>
+<span class="pc bpc" id="L431" title="1 of 2 branches missed.">            if (other.title != null)</span>
+<span class="nc" id="L432">                return false;</span>
+<span class="nc bnc" id="L433" title="All 2 branches missed.">        } else if (!title.equals(other.title))</span>
+<span class="nc" id="L434">            return false;</span>
+<span class="pc bpc" id="L435" title="1 of 2 branches missed.">        if (detail == null) {</span>
+<span class="pc bpc" id="L436" title="1 of 2 branches missed.">            if (other.detail != null)</span>
+<span class="nc" id="L437">                return false;</span>
+<span class="nc bnc" id="L438" title="All 2 branches missed.">        } else if (!detail.equals(other.detail))</span>
+<span class="nc" id="L439">            return false;</span>
+<span class="pc bpc" id="L440" title="1 of 2 branches missed.">        if (instance == null) {</span>
+<span class="pc bpc" id="L441" title="1 of 2 branches missed.">            if (other.instance != null)</span>
+<span class="nc" id="L442">                return false;</span>
+<span class="nc bnc" id="L443" title="All 2 branches missed.">        } else if (!instance.equals(other.instance))</span>
+<span class="nc" id="L444">            return false;</span>
+<span class="fc" id="L445">        return true;</span>
     }
 
     /**
@@ -452,8 +450,8 @@ public class Problem {
      */
     @Override
     public String toString() {
-<span class="fc" id="L455">        return &quot;Problem [type=&quot; + type + &quot;, title=&quot; + title + &quot;]&quot;;</span>
+<span class="fc" id="L453">        return &quot;Problem [type=&quot; + type + &quot;, title=&quot; + title + &quot;]&quot;;</span>
     }
     
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
