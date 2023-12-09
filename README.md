@@ -24,7 +24,7 @@ The Maven Coordinates are:
 
 # Contributing
 
-Contributions are very welcome! Critical is that no dependencies are added to the project. Otherwise suggestions, bug fixes etc. are all welcome.
+Contributions are very welcome! Critical is that no dependencies are added to the project. Otherwise suggestions, bug fixes etc. are all welcome. Open a new Issue and label it as a question if you have suggestions or want more information.
 
 - All code must compile (without warnings) using ```mvn clean verify```
 - The site must build completely using ```mvn clean verify site```
