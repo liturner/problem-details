@@ -28,8 +28,11 @@ public class BiggerProblem extends Problem {
 
     @Override
     protected void extendXml(XMLStreamWriter xmlStreamWriter, Charset charset) throws XMLStreamException {
-        xmlStreamWriter.writeStartElement("bp", solution, NAMESPACE);
+        xmlStreamWriter.writeStartElement("bp", "solution", NAMESPACE);
         xmlStreamWriter.writeCharacters(solution);
+        xmlStreamWriter.writeEndElement();
+        xmlStreamWriter.writeStartElement("http://some.other.ns", "random");
+        xmlStreamWriter.writeCharacters("Bad Practice");
         xmlStreamWriter.writeEndElement();
     }
 

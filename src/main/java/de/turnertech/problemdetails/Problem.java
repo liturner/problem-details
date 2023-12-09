@@ -304,7 +304,8 @@ public class Problem {
      */
     public void toXml(OutputStream outputStream, Charset charset, boolean writeStartDocument) throws XMLStreamException {
         XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-        XMLStreamWriter xmlStreamWriter = outputFactory.createXMLStreamWriter(outputStream);
+        outputFactory.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, true);
+        XMLStreamWriter xmlStreamWriter = outputFactory.createXMLStreamWriter(outputStream, charset.toString());
         toXml(xmlStreamWriter, charset, writeStartDocument);
     }
     
@@ -383,6 +384,7 @@ public class Problem {
      * closing the problem element. Pay carefull attention to the namespaces!
      * @param xmlStreamWriter the writer you must use to write to the stream
      * @param charset the charset this XML is being written in
+     * @throws XMLStreamException if there are problems with extending the XML.
      */
     protected void extendXml(XMLStreamWriter xmlStreamWriter, Charset charset) throws XMLStreamException {
         // Called before closing the last element.

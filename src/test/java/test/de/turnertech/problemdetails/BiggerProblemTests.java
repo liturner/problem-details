@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import de.turnertech.problemdetails.Problem;
 
-public class BiggerProblemTests {
+class BiggerProblemTests {
 
     @Test
     void sanity_check() throws XMLStreamException, IOException {
