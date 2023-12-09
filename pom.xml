@@ -7,7 +7,7 @@
   <name>Problem Details (RFC 9457)</name>
   <inceptionYear>2023</inceptionYear>
   <url>https://liturner.github.io/problem-details/</url>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
 
   <description>A Java implementation of RFC 9457.</description>
@@ -21,7 +21,7 @@
     <connection>scm:git:https://github.com/liturner/problem-details.git</connection>
     <developerConnection>scm:git:https://github.com/liturner/problem-details.git</developerConnection>
     <url>https://github.com/liturner/problem-details</url>
-    <tag>HEAD</tag>
+    <tag>problem-details-1.0.0</tag>
   </scm>
 
   <issueManagement>
