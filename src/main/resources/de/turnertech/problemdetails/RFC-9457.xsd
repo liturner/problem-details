@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:ietf:rfc:7807"
+    xmlns:ns="urn:ietf:rfc:7807" elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xs:element name="problem">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="type" type="xs:anyURI" minOccurs="1" maxOccurs="1" />
+                <xs:element name="title" type="xs:string" minOccurs="0" maxOccurs="1" />
+                <xs:element name="detail" type="xs:string" minOccurs="0" maxOccurs="1" />
+                <xs:element name="status" type="xs:positiveInteger" minOccurs="0" maxOccurs="1" />
+                <xs:element name="instance" type="xs:anyURI" minOccurs="0" maxOccurs="1" />
+                <xs:any processContents="lax" minOccurs="0" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

@@ -25,8 +25,11 @@ class ProblemTests {
 
     @Test
     void to_json() throws XMLStreamException, IOException {
-        Problem a = new Problem();
-        System.out.println(a.toJson());
+        Problem myProblem = new Problem();
+        myProblem.setStatus(404);
+        myProblem.setTitle(Problem.findStatusPhrase(404));
+        System.out.println(myProblem.toJson());
+        System.out.println(myProblem.toXml());
     }
 
     @Test

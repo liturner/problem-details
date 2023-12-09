@@ -12,12 +12,12 @@ class StatusCodeTests {
     
     @Test
     void get_status_phrase_404_default_english() {    
-        assertEquals("Not Found", Problem.getStatusPhrase(404));
+        assertEquals("Not Found", Problem.findStatusPhrase(404));
     }
 
     @Test
     void get_status_phrase_404_german() {    
-        assertEquals("Nicht gefunden", Problem.getStatusPhrase(404, Locale.GERMAN));
+        assertEquals("Nicht gefunden", Problem.findStatusPhrase(404, Locale.GERMAN));
     }
 
     @Test

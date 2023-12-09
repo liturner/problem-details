@@ -1,32 +1,92 @@
-# Tuples
+# Problem Details (RFC 9457)
 
-This library focuses on the concept of a Tuple as an ordered List of N elements. The core turnertech.tuples.Tuple class supports any number of elements, but is not typed! It is however able to handle nested Tuples in an elegant manner. The Tuple class is immutable, and only provides minimal functionality. Further functions for performing operations on Tuple instances can be found in the turnertech.tuples.Tuples class.
+This project provides a Java implementation of RFC 9457.
 
-Additionally, a few Typed Tuple classes are provided.
+The implementation:
+- Has a module-info.java
+- Is available on Maven Central
+- Supports extension
+- Has no dependencies, other than Java itself
 
-## Assumptions
+# Usage
 
-- A ```n-tuple``` does not "```extend```" a ```n+1-tuple```. In Java this means I cannot cast a ```Tuple3``` to a ```Tuple2```. This would not be correct for Tuples as a Tuple is immutable. Casting as in this example would be equivelant to removing an element, and not casting.
-
-## Examples
-
-Typed tuples, usefull for fixed data, return types or similar.
+The full [Javadoc](apidocs) is available.
 
 ```java
-Tuple2 a = new Tuple2(1, 2);
-Tuple2 b = Tuple.from(1, new File(""));
+Problem myProblem = new Problem();
+myProblem.setStatus(404);
+myProblem.setTitle(Problem.findStatusPhrase(404));
+System.out.println(myProblem.toJson());
+System.out.println(myProblem.toXml());
 
-int firstOfA = a.getElement0(); // 1
-File secondOfB = b.getElement1(); // File instance
+// Results in the folowing output:
+//
+// {"type":"about:blank","title":"Not Found","status":"404"}
+// <?xml version="1.0" encoding="UTF-8"?><problem xmlns="urn:ietf:rfc:7807"><problem>about:blank</problem><title>Not Found</title><status>404</status></problem>
 ```
 
-Raw tuples, usefull for something (probably).
+If you are using this in a HTTP Servlet or similar, you will probably be using something like this:
 
 ```java
-Tuple a = new Tuple2(1, 2);
-Tuple b = Tuple.from(new Tuple0(), 1, Tuple.from(2, 6), new Tuple0());
+@Override
+protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+    String requestedContentType = httpServletRequest.getHeader("Accept");
 
-int firstOfA = a.getElement0(); // 1
-String bString = b.toString(); // ((), 1, (2, 6), ())
-Object b.get(3); // 6
+    Problem myProblem = new Problem();
+    myProblem.setStatus(404);
+    myProblem.setTitle(Problem.findStatusPhrase(myProblem.getStatus()));
+    
+    httpServletResponse.setStatus(myProblem.getStatus());
+
+    if(Problem.MEDIA_TYPE_XML.equals(requestedContentType)) {
+        httpServletResponse.setContentType(Problem.MEDIA_TYPE_XML);
+        myProblem.toXml(httpServletResponse.getOutputStream(), StandardCharsets.UTF_8, true);
+    } else if(Problem.MEDIA_TYPE_JSON.equals(requestedContentType)) {
+        httpServletResponse.setContentType(Problem.MEDIA_TYPE_JSON);
+        myProblem.toJson(httpServletResponse.getOutputStream(), StandardCharsets.UTF_8);    
+    }
+}
+```
+
+# Extensions
+
+```java
+public class BiggerProblem extends Problem {
+
+    private static final String NAMESPACE = "http://my.namespace";
+
+    private String solution = "Moar Hugs";
+
+    @Override
+    protected boolean extendJson(OutputStream outputStream, Charset charset) {
+        try(PrintWriter printWriter = new PrintWriter(outputStream)) {
+            printWriter.write(",\"solution\":\"");
+            printWriter.write(solution);
+            printWriter.write("\"");
+            printWriter.flush();
+        }
+        return true;
+    }
+
+    @Override
+    protected void extendXml(XMLStreamWriter xmlStreamWriter, Charset charset) throws XMLStreamException {
+        xmlStreamWriter.writeStartElement("bp", solution, NAMESPACE);
+        xmlStreamWriter.writeCharacters(solution);
+        xmlStreamWriter.writeEndElement();
+    }
+
+}
+```
+
+```java
+Problem myProblem = new BiggerProblem();
+myProblem.setStatus(404);
+myProblem.setTitle(Problem.findStatusPhrase(404));
+System.out.println(myProblem.toJson());
+System.out.println(myProblem.toXml());
+
+// Results in the folowing output:
+//
+// {"type":"about:blank","title":"Not Found","status":"404","solution":"Moar Hugs"}
+// <?xml version="1.0" encoding="UTF-8"?><problem xmlns="urn:ietf:rfc:7807"><problem>about:blank</problem><title>Not Found</title><status>404</status><bp:Moar Hugs>Moar Hugs</bp:Moar Hugs></problem>
 ```
