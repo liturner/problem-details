@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Problem.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Problem Details (RFC 9457)</a> &gt; <a href="index.source.html" class="el_package">de.turnertech.problemdetails</a> &gt; <span class="el_source">Problem.java</span></div><h1>Problem.java</h1><pre class="source lang-java linenums">package de.turnertech.problemdetails;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidParameterException;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
+/**
+ * A POJO representation of the urn:ietf:rfc:7807 problem type.
+ */
+public class Problem {
+    
+    /** urn:ietf:rfc:7807 */
+    public static final String NAMESPACE = &quot;urn:ietf:rfc:7807&quot;;
+    
+    /** application/problem+xml */
+    public static final String MEDIA_TYPE_XML = &quot;application/problem+xml&quot;;
+    
+    /** application/problem+json */
+    public static final String MEDIA_TYPE_JSON = &quot;application/problem+json&quot;;
+    
+<span class="fc" id="L35">    private static final ResourceBundle i18n = ResourceBundle.getBundle(&quot;de.turnertech.problemdetails.i18n&quot;);</span>
+
+    private static final String PROBLEM_STRING = &quot;problem&quot;;
+    
+    // Mandatory with default
+    private URI type;
+    
+    // Optional, must be same as HTTP response if present
+    private Integer status;
+    
+    // Advisory
+    private String title;
+    
+    // Optional
+    private String detail;
+    
+    // Optional
+    private URI instance;
+
+    /**
+     * Constructs an empty Problem with the type &quot;about:blank&quot; (RFC 9457 - 4.2.1.).
+     */
+    public Problem() {
+<span class="fc" id="L58">        this(URI.create(&quot;about:blank&quot;));</span>
+<span class="fc" id="L59">    }</span>
+
+    /**
+     * Constructs a Problem with the provided parameters. Note that type may not be null.
+     * @param type RFC 9457 - 3.1.1.
+     * @throws NullPointerException if type is null.
+     */
+    public Problem(URI type) {
+<span class="fc" id="L67">        this(type, null);</span>
+<span class="fc" id="L68">    }</span>
+
+    /**
+     * Constructs a Problem with the provided parameters. Note that type may not be null.
+     * @param type RFC 9457 - 3.1.1.
+     * @param instance RFC 9457 - 3.1.5.
+     * @throws NullPointerException if type is null.
+     */
+<span class="fc" id="L76">    public Problem(URI type, URI instance) throws NullPointerException {</span>
+<span class="fc" id="L77">        this.type = Objects.requireNonNull(type, i18n.getString(&quot;error.type.nonnull&quot;));</span>
+<span class="fc" id="L78">        this.instance = instance;</span>
+<span class="fc" id="L79">    }</span>
+    
+    /**
+     * Constructs a deep copy of the provided problem. If you extend this class, make sure
+     * that your implementation of the copy constructor also returns deep copies.
+     * @param other problem to copy.
+     */
+<span class="nc" id="L86">    public Problem(Problem other) {</span>
+<span class="nc" id="L87">        this.type = other.type;</span>
+<span class="nc" id="L88">        this.status = other.status;</span>
+<span class="nc" id="L89">        this.title = other.title;</span>
+<span class="nc" id="L90">        this.detail = other.detail;</span>
+<span class="nc" id="L91">        this.instance = other.instance;</span>
+<span class="nc" id="L92">    }</span>
+
+    /**
+     * Gets the problem type.
+     * @return the problem type.
+     */
+    public URI getType() {
+<span class="fc" id="L99">        return type;</span>
+    }
+
+    /**
+     * Sets the problem type.
+     * @param type the problem type.
+     * @throws NullPointerException if type is null
+     */
+    public void setType(URI type) throws NullPointerException {
+<span class="nc" id="L108">        this.type = Objects.requireNonNull(type, i18n.getString(&quot;error.type.nonnull&quot;));</span>
+<span class="nc" id="L109">    }</span>
+
+    /**
+     * Gets the problem status code (HTTP Status Code).
+     * @return the problem status code (HTTP Status Code)
+     */
+    public Integer getStatus() {
+<span class="nc" id="L116">        return status;</span>
+    }
+
+    /**
+     * Sets the problem status code (HTTP Status Code). If set, this must be the same as the one used in your HTTP Response.
+     * @param status the problem status code (HTTP Status Code).
+     * @see #findStatusPhrase(int)
+     */
+    public void setStatus(Integer status) {
+<span class="pc bpc" id="L125" title="3 of 6 branches missed.">        if(status != null &amp;&amp; (status &lt; 100 || status &gt; 599)) {</span>
+<span class="nc" id="L126">            throw new InvalidParameterException(i18n.getString(&quot;error.status.inrange&quot;));</span>
+        }
+<span class="fc" id="L128">        this.status = status;</span>
+<span class="fc" id="L129">    }</span>
+
+    /**
+     * Gets the problem title.
+     * @return the problem title.
+     */
+    public String getTitle() {
+<span class="nc" id="L136">        return title;</span>
+    }
+
+    /**
+     * Sets the problem title.
+     * @param title the short human readable title.
+     * @see #findStatusPhrase(int)
+     */
+    public void setTitle(String title) {
+<span class="fc" id="L145">        this.title = title;</span>
+<span class="fc" id="L146">    }</span>
+
+    /**
+     * Gets the problem detail.
+     * @return the problem detail.
+     */
+    public String getDetail() {
+<span class="nc" id="L153">        return detail;</span>
+    }
+
+    /**
+     * Sets the problem detail.
+     * @param detail the problem detail.
+     */
+    public void setDetail(String detail) {
+<span class="nc" id="L161">        this.detail = detail;</span>
+<span class="nc" id="L162">    }</span>
+
+    /**
+     * Gets the problem instance.
+     * @return the problem instance.
+     */
+    public URI getInstance() {
+<span class="nc" id="L169">        return instance;</span>
+    }
+
+    /**
+     * Sets the problem instance.
+     * @param instance the problem instance.
+     */
+    public void setInstance(URI instance) {
+<span class="nc" id="L177">        this.instance = instance;</span>
+<span class="nc" id="L178">    }</span>
+
+    /**
+     * Helper for retrieving the HTTP Status Phrase for a HTTP Status Code.
+     * @param statusCode the HTTP Status Code.
+     * @return the HTTP Status Phrase in English, may be null.
+     * @see #findStatusPhrase(int, Locale)
+     */
+    public static String findStatusPhrase(int statusCode) {
+<span class="fc" id="L187">        return findStatusPhrase(statusCode, Locale.ENGLISH);</span>
+    }
+
+    /**
+     * Helper for retrieving the localised HTTP Status Phrase for a HTTP Status Code.
+     * @param statusCode the HTTP Status Code.
+     * @param locale the desired language.
+     * @return the HTTP Status Phrase, may be null.
+     * @see #findStatusPhrase(int)
+     */
+    public static String findStatusPhrase(int statusCode, Locale locale) {
+<span class="fc" id="L198">        ResourceBundle strings = ResourceBundle.getBundle(&quot;de.turnertech.problemdetails.i18n&quot;, locale);</span>
+<span class="fc" id="L199">        return strings.getString(Integer.toString(statusCode));</span>
+    }
+    
+    /**
+     * Converts the contents to a String containing the JSON representation of this Problem.
+     * @return the JSON String.
+     * @throws IOException if there are problems with extending the JSON.
+     * @see #extendJson(OutputStream, Charset)
+     * @see #toJson(OutputStream)
+     * @see #toJson(OutputStream, Charset)
+     */
+    public String toJson() throws IOException {
+<span class="fc" id="L211">        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {</span>
+<span class="fc" id="L212">            toJson(outputStream);</span>
+<span class="fc" id="L213">            return outputStream.toString(StandardCharsets.UTF_8);</span>
+        }
+    }
+
+    /**
+     * Writes the Problem to the supplied stream in JSON format using UTF-8.
+     * @param outputStream the stream to write to.
+     * @throws IOException if there are problems with extending the JSON.
+     * @see #extendJson(OutputStream, Charset)
+     * @see #toJson()
+     * @see #toJson(OutputStream, Charset)
+     */
+    public void toJson(OutputStream outputStream) throws IOException {
+<span class="fc" id="L226">        toJson(outputStream, StandardCharsets.UTF_8);</span>
+<span class="fc" id="L227">    }</span>
+
+    /**
+     * Writes the Problem to the supplied stream in JSON format using the supplied Charset.
+     * @param outputStream the stream to write to.
+     * @param charset the Charset to use.
+     * @throws IOException if there are problems with extending the JSON.
+     */
+    public void toJson(OutputStream outputStream, Charset charset) throws IOException {
+<span class="fc" id="L236">        try(PrintWriter printWriter = new PrintWriter(outputStream)) {</span>
+<span class="fc" id="L237">            printWriter.write(&quot;{\&quot;type\&quot;:\&quot;&quot;);</span>
+<span class="fc" id="L238">            printWriter.write(type.toString());</span>
+<span class="fc" id="L239">            printWriter.write(&quot;\&quot;&quot;);</span>
+
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">            if(title != null) {</span>
+<span class="fc" id="L242">                printWriter.write(&quot;,\&quot;title\&quot;:\&quot;&quot;);</span>
+<span class="fc" id="L243">                printWriter.write(title);</span>
+<span class="fc" id="L244">                printWriter.write(&quot;\&quot;&quot;);</span>
+            }
+<span class="pc bpc" id="L246" title="1 of 2 branches missed.">            if(status != null) {</span>
+<span class="fc" id="L247">                printWriter.write(&quot;,\&quot;status\&quot;:\&quot;&quot;);</span>
+<span class="fc" id="L248">                printWriter.write(Integer.toString(status));</span>
+<span class="fc" id="L249">                printWriter.write(&quot;\&quot;&quot;);</span>
+            }
+<span class="pc bpc" id="L251" title="1 of 2 branches missed.">            if(detail != null) {</span>
+<span class="nc" id="L252">                printWriter.write(&quot;,\&quot;detail\&quot;:\&quot;&quot;);</span>
+<span class="nc" id="L253">                printWriter.write(detail);</span>
+<span class="nc" id="L254">                printWriter.write(&quot;\&quot;&quot;);</span>
+            }
+<span class="pc bpc" id="L256" title="1 of 2 branches missed.">            if(instance != null) {</span>
+<span class="nc" id="L257">                printWriter.write(&quot;,\&quot;instance\&quot;:\&quot;&quot;);</span>
+<span class="nc" id="L258">                printWriter.write(instance.toString());</span>
+<span class="nc" id="L259">                printWriter.write(&quot;\&quot;&quot;);</span>
+            }
+
+<span class="fc" id="L262">            printWriter.flush();</span>
+
+        }
+
+<span class="fc" id="L266">        extendJson(outputStream, charset);</span>
+
+<span class="fc" id="L268">        outputStream.write(&quot;}&quot;.getBytes(charset));</span>
+<span class="fc" id="L269">    }</span>
+
+    /**
+     * &lt;p&gt;Override this if you wish to extend the JSON response. This function is called directly before
+     * closing the problem element. Pay carefull attention to the namespaces!&lt;/p&gt;
+     * @param outputStream the stream to write to
+     * @param charset the charset this XML is being written in
+     * @return true if an element was inserted (so that the caller can decide whether or not to write a &quot;,&quot;)
+     */
+    protected boolean extendJson(OutputStream outputStream, Charset charset) {
+        // Called before closing the last element.
+<span class="fc" id="L280">        return false;</span>
+    }
+
+    /**
+     * Converts the contents to a String containing the XML representation of this Problem.
+     * @return the XML String.
+     * @throws XMLStreamException if there are problems with extending the XML.
+     * @see #extendXml(XMLStreamWriter, Charset)
+     * @see #toXml(OutputStream, Charset, boolean)
+     * @see #toXml(XMLStreamWriter, Charset, boolean)
+     */
+    public String toXml() throws XMLStreamException {
+<span class="fc" id="L292">        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {</span>
+<span class="fc" id="L293">            toXml(outputStream, StandardCharsets.UTF_8, true);</span>
+<span class="fc" id="L294">            return outputStream.toString(StandardCharsets.UTF_8);</span>
+<span class="nc" id="L295">        } catch (IOException e) {</span>
+<span class="nc" id="L296">            return null;</span>
+        }
+    }
+    
+    /**
+     * Writes the Problem to the supplied stream in XML format using the supplied charset.
+     * @param outputStream to write to.
+     * @param charset to write using.
+     * @param writeStartDocument to indicate if the xml start document should also be written.
+     * @throws XMLStreamException if there are problems with extending the XML.
+     * @throws UnsupportedEncodingException
+     */
+    public void toXml(OutputStream outputStream, Charset charset, boolean writeStartDocument) throws XMLStreamException, UnsupportedEncodingException {
+<span class="fc" id="L309">        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, charset);</span>
+<span class="fc" id="L310">        XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();</span>
+<span class="fc" id="L311">        XMLStreamWriter xmlStreamWriter = outputFactory.createXMLStreamWriter(outputStreamWriter);</span>
+<span class="fc" id="L312">        toXml(xmlStreamWriter, charset, writeStartDocument);</span>
+<span class="fc" id="L313">    }</span>
+    
+    /**
+     * Writes the Problem to the supplied writer in XML format using the supplied charset.
+     * @param xmlStreamWriter to write using.
+     * @param charset to write using.
+     * @param writeStartDocument to indicate if the xml start document should also be written.
+     * @throws XMLStreamException if there are problems with extending the XML.
+     */
+    public void toXml(XMLStreamWriter xmlStreamWriter, Charset charset, boolean writeStartDocument) throws XMLStreamException {
+<span class="pc bpc" id="L323" title="1 of 2 branches missed.">        if(writeStartDocument) {</span>
+<span class="fc" id="L324">            xmlStreamWriter.writeStartDocument(charset.toString(), &quot;1.0&quot;);</span>
+        }
+        
+<span class="fc" id="L327">        String defaultNs = xmlStreamWriter.getNamespaceContext().getNamespaceURI(&quot;&quot;);</span>
+<span class="fc" id="L328">        String prefix = xmlStreamWriter.getNamespaceContext().getPrefix(NAMESPACE);</span>
+        
+<span class="pc bpc" id="L330" title="1 of 2 branches missed.">        if(prefix != null) {</span>
+<span class="nc" id="L331">            xmlStreamWriter.writeStartElement(NAMESPACE, PROBLEM_STRING);</span>
+<span class="pc bpc" id="L332" title="1 of 2 branches missed.">        } else if(defaultNs == null) {</span>
+<span class="fc" id="L333">            xmlStreamWriter.writeStartElement(PROBLEM_STRING);</span>
+<span class="fc" id="L334">            xmlStreamWriter.writeDefaultNamespace(NAMESPACE);</span>
+        } else {
+<span class="nc" id="L336">            prefix = &quot;p&quot;;</span>
+<span class="nc" id="L337">            int i = 0;</span>
+<span class="nc bnc" id="L338" title="All 2 branches missed.">            while(xmlStreamWriter.getNamespaceContext().getNamespaceURI(prefix) != null) {</span>
+<span class="nc" id="L339">                prefix = &quot;p&quot; + Integer.toString(i);</span>
+            }
+<span class="nc" id="L341">            xmlStreamWriter.writeStartElement(prefix, PROBLEM_STRING, NAMESPACE);</span>
+<span class="nc" id="L342">            xmlStreamWriter.writeNamespace(prefix, NAMESPACE);</span>
+        }
+        
+<span class="pc bpc" id="L345" title="1 of 2 branches missed.">        if(type != null) {</span>
+<span class="fc" id="L346">            xmlStreamWriter.writeStartElement(NAMESPACE, PROBLEM_STRING);</span>
+<span class="fc" id="L347">            xmlStreamWriter.writeCharacters(type.toString());</span>
+<span class="fc" id="L348">            xmlStreamWriter.writeEndElement();</span>
+        }
+
+<span class="pc bpc" id="L351" title="1 of 2 branches missed.">        if(title != null) {</span>
+<span class="fc" id="L352">            xmlStreamWriter.writeStartElement(NAMESPACE, &quot;title&quot;);</span>
+<span class="fc" id="L353">            xmlStreamWriter.writeCharacters(title);</span>
+<span class="fc" id="L354">            xmlStreamWriter.writeEndElement();</span>
+        }
+
+<span class="pc bpc" id="L357" title="1 of 2 branches missed.">        if(status != null) {</span>
+<span class="fc" id="L358">            xmlStreamWriter.writeStartElement(NAMESPACE, &quot;status&quot;);</span>
+<span class="fc" id="L359">            xmlStreamWriter.writeCharacters(Integer.toString(status));</span>
+<span class="fc" id="L360">            xmlStreamWriter.writeEndElement();</span>
+        }
+
+<span class="pc bpc" id="L363" title="1 of 2 branches missed.">        if(detail != null) {</span>
+<span class="nc" id="L364">            xmlStreamWriter.writeStartElement(NAMESPACE, &quot;detail&quot;);</span>
+<span class="nc" id="L365">            xmlStreamWriter.writeCharacters(detail);</span>
+<span class="nc" id="L366">            xmlStreamWriter.writeEndElement();</span>
+        }
+
+<span class="pc bpc" id="L369" title="1 of 2 branches missed.">        if(instance != null) {</span>
+<span class="nc" id="L370">            xmlStreamWriter.writeStartElement(NAMESPACE, &quot;instance&quot;);</span>
+<span class="nc" id="L371">            xmlStreamWriter.writeCharacters(instance.toString());</span>
+<span class="nc" id="L372">            xmlStreamWriter.writeEndElement();</span>
+        }
+        
+<span class="fc" id="L375">        extendXml(xmlStreamWriter, charset);</span>
+        
+        // /problem
+<span class="fc" id="L378">        xmlStreamWriter.writeEndElement();</span>
+        
+<span class="pc bpc" id="L380" title="1 of 2 branches missed.">        if(writeStartDocument) {</span>
+<span class="fc" id="L381">            xmlStreamWriter.writeEndDocument();</span>
+        }
+<span class="fc" id="L383">    }</span>
+    
+    /**
+     * Override this if you wish to extend the XML response. This function is called directly before
+     * closing the problem element. Pay carefull attention to the namespaces!
+     * @param xmlStreamWriter the writer you must use to write to the stream
+     * @param charset the charset this XML is being written in
+     */
+    protected void extendXml(XMLStreamWriter xmlStreamWriter, Charset charset) throws XMLStreamException {
+        // Called before closing the last element.
+<span class="fc" id="L393">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+<span class="nc" id="L400">        final int prime = 31;</span>
+<span class="nc" id="L401">        int result = 1;</span>
+<span class="nc bnc" id="L402" title="All 2 branches missed.">        result = prime * result + ((type == null) ? 0 : type.hashCode());</span>
+<span class="nc bnc" id="L403" title="All 2 branches missed.">        result = prime * result + ((status == null) ? 0 : status.hashCode());</span>
+<span class="nc bnc" id="L404" title="All 2 branches missed.">        result = prime * result + ((title == null) ? 0 : title.hashCode());</span>
+<span class="nc bnc" id="L405" title="All 2 branches missed.">        result = prime * result + ((detail == null) ? 0 : detail.hashCode());</span>
+<span class="nc bnc" id="L406" title="All 2 branches missed.">        result = prime * result + ((instance == null) ? 0 : instance.hashCode());</span>
+<span class="nc" id="L407">        return result;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+<span class="pc bpc" id="L415" title="1 of 2 branches missed.">        if (this == obj)</span>
+<span class="nc" id="L416">            return true;</span>
+<span class="pc bpc" id="L417" title="1 of 2 branches missed.">        if (obj == null)</span>
+<span class="nc" id="L418">            return false;</span>
+<span class="pc bpc" id="L419" title="1 of 2 branches missed.">        if (getClass() != obj.getClass())</span>
+<span class="nc" id="L420">            return false;</span>
+<span class="fc" id="L421">        Problem other = (Problem) obj;</span>
+<span class="pc bpc" id="L422" title="1 of 2 branches missed.">        if (type == null) {</span>
+<span class="nc bnc" id="L423" title="All 2 branches missed.">            if (other.type != null)</span>
+<span class="nc" id="L424">                return false;</span>
+<span class="pc bpc" id="L425" title="1 of 2 branches missed.">        } else if (!type.equals(other.type))</span>
+<span class="nc" id="L426">            return false;</span>
+<span class="pc bpc" id="L427" title="1 of 2 branches missed.">        if (status == null) {</span>
+<span class="pc bpc" id="L428" title="1 of 2 branches missed.">            if (other.status != null)</span>
+<span class="nc" id="L429">                return false;</span>
+<span class="nc bnc" id="L430" title="All 2 branches missed.">        } else if (!status.equals(other.status))</span>
+<span class="nc" id="L431">            return false;</span>
+<span class="pc bpc" id="L432" title="1 of 2 branches missed.">        if (title == null) {</span>
+<span class="pc bpc" id="L433" title="1 of 2 branches missed.">            if (other.title != null)</span>
+<span class="nc" id="L434">                return false;</span>
+<span class="nc bnc" id="L435" title="All 2 branches missed.">        } else if (!title.equals(other.title))</span>
+<span class="nc" id="L436">            return false;</span>
+<span class="pc bpc" id="L437" title="1 of 2 branches missed.">        if (detail == null) {</span>
+<span class="pc bpc" id="L438" title="1 of 2 branches missed.">            if (other.detail != null)</span>
+<span class="nc" id="L439">                return false;</span>
+<span class="nc bnc" id="L440" title="All 2 branches missed.">        } else if (!detail.equals(other.detail))</span>
+<span class="nc" id="L441">            return false;</span>
+<span class="pc bpc" id="L442" title="1 of 2 branches missed.">        if (instance == null) {</span>
+<span class="pc bpc" id="L443" title="1 of 2 branches missed.">            if (other.instance != null)</span>
+<span class="nc" id="L444">                return false;</span>
+<span class="nc bnc" id="L445" title="All 2 branches missed.">        } else if (!instance.equals(other.instance))</span>
+<span class="nc" id="L446">            return false;</span>
+<span class="fc" id="L447">        return true;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L455">        return &quot;Problem [type=&quot; + type + &quot;, title=&quot; + title + &quot;]&quot;;</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
