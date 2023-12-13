@@ -164,6 +164,17 @@
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
               <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
             </manifest>
+            <manifestEntries>
+              <Bundle-SymbolicName>de.turnertech.problemdetails</Bundle-SymbolicName>
+              <Bundle-Version>${project.version}</Bundle-Version>
+              <Export-Package>de.turnertech.problemdetails;version=${project.version}</Export-Package>
+              <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+              <Bundle-Copyright>© ${project.inceptionYear} ${project.organization.name}</Bundle-Copyright>
+              <Bundle-Name>${project.name}</Bundle-Name>
+              <Bundle-Vendor>${project.organization.name}</Bundle-Vendor>
+              <Bundle-Description>${project.description}</Bundle-Description>
+              <Bundle-License>MIT;link="https://raw.githubusercontent.com/liturner/problem-details/main/LICENSE"</Bundle-License>
+            </manifestEntries>
           </archive>
         </configuration>
       </plugin>
