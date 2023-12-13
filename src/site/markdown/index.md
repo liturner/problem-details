@@ -4,6 +4,7 @@ This project provides a Java implementation of RFC 9457.
 
 The implementation:
 - Has a module-info.java
+- Has an OSGi compatible MANIFEST.MF
 - Is available on Maven Central
 - Supports extension
 - Has no dependencies, other than Java itself
